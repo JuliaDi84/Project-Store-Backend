@@ -24,7 +24,7 @@ public class ItemController {
         List<Item> itemsList = itemService.findAll();
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Lista items generata cu success")
+                .message("Lista produse generata cu success")
                 .data(itemsList)
                 .build();
         return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class ItemController {
 
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Item creat cu success")
+                .message("Produs creat cu success")
                 .data(itemService.createItem(it))
                 .build();
         return ResponseEntity.ok(response);
@@ -72,7 +72,7 @@ public class ItemController {
 
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Item actulizat cu success")
+                .message("Produs actulizat cu success")
                 .data(itemService.updateItem(item))
                 .build();
         return ResponseEntity.ok(response);
@@ -83,7 +83,7 @@ public class ItemController {
         itemService.deleteItem(id);
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Item sters cu success")
+                .message("Produs sters cu success")
                 .data(null)
                 .build();
         return ResponseEntity.ok(response);

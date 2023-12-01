@@ -1,9 +1,12 @@
 package com.sda.app.controller;
 
 import com.sda.app.dto.CartDto;
+import com.sda.app.dto.FavouriteDto;
 import com.sda.app.entity.Cart;
+import com.sda.app.entity.Favourite;
 import com.sda.app.entity.User;
 import com.sda.app.service.CartService;
+import com.sda.app.service.FavouriteService;
 import com.sda.app.service.UserService;
 import com.sda.app.utils.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,47 +15,46 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
-
 @RestController
 @CrossOrigin("http://localhost:4200")
-@RequestMapping("/carts")
-public class CartController {
+@RequestMapping("/favourites")
+public class FavouriteController {
     @Autowired
-    private CartService cartService;
+    private FavouriteService favouriteService;
 
     @Autowired
     private UserService userService;
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse> getAllCarts() {
-           List<Cart> cartList = this.cartService.findAll();
-           ApiResponse response = new ApiResponse.Builder()
+    public ResponseEntity<ApiResponse> getAllFavourites() {
+        List<Favourite> favouriteList = this.favouriteService.findAll();
+        ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Lista de cosuri")
-                .data(cartList)
+                .message("Lista de favorite")
+                .data(favouriteList)
                 .build();
         return ResponseEntity.ok(response);
     }
 
     @PostMapping("/")
-    public ResponseEntity<ApiResponse> createCart(@RequestBody CartDto cartDto) {
-        System.out.println(cartDto.getUserId());
+    public ResponseEntity<ApiResponse> createFavourite(@RequestBody FavouriteDto favouriteDto) {
+        System.out.println(favouriteDto.getUserId());
 
         try {
-            Optional<User> optionalUser = this.userService.findById(cartDto.getUserId());
+            Optional<User> optionalUser = this.userService.findById(favouriteDto.getUserId());
 
             if(optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
-                Cart cart = new Cart();
+                Favourite favourite = new Favourite();
 
-                cart.setUser(user);
-                cart.setItems(cartDto.getItems());
+                favourite.setUser(user);
+                favourite.setItems(favouriteDto.getItems());
 
                 ApiResponse response = new ApiResponse.Builder()
                         .status(200)
-                        .message("Cos creat cu success")
-                        .data(cartService.createCart(cart))
+                        .message("Favourites successfully created")
+                        .data(favouriteService.createFavourite(favourite))
                         .build();
                 return ResponseEntity.ok(response);
             } else {
@@ -69,23 +71,23 @@ public class CartController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse> updateCart(@RequestBody CartDto cartDto, @PathVariable("id") Integer id) {
+    public ResponseEntity<ApiResponse> updateFavourite(@RequestBody FavouriteDto favouriteDto, @PathVariable("id") Integer id) {
         try {
-            Optional<User> optionalUser = this.userService.findById(cartDto.getUserId());
+            Optional<User> optionalUser = this.userService.findById(favouriteDto.getUserId());
 
             if(optionalUser.isPresent()) {
                 User user = optionalUser.get();
 
-                Cart cart = new Cart();
+                Favourite favourite = new Favourite();
 
-                cart.setId(id);
-                cart.setUser(user);
-                cart.setItems(cartDto.getItems());
+                favourite.setId(id);
+                favourite.setUser(user);
+                favourite.setItems(favouriteDto.getItems());
 
                 ApiResponse response = new ApiResponse.Builder()
                         .status(200)
                         .message("Cos actualizat cu success")
-                        .data(cartService.updateCart(cart))
+                        .data(favouriteService.updateFavourite(favourite))
                         .build();
                 return ResponseEntity.ok(response);
             } else {
@@ -102,15 +104,14 @@ public class CartController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse> deleteCart(@PathVariable("id") Integer id) {
-        cartService.deleteCartById(id);
+    public ResponseEntity<ApiResponse> deleteFavourite(@PathVariable("id") Integer id) {
+        favouriteService.deleteFavouriteById(id);
 
         ApiResponse response = new ApiResponse.Builder()
                 .status(200)
-                .message("Cos sters cu success")
+                .message("Favourite successfully deleted")
                 .data(null)
                 .build();
         return ResponseEntity.ok(response);
     }
 }
-
